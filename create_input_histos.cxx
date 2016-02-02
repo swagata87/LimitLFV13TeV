@@ -34,7 +34,8 @@ void create_input_histos(int width_signal_region){
     "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/WZ_tot.root",
     "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/ZZ_tot.root",
     "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/Wgamma.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/QCD.root"
+    //"/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/QCD.root"
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/Bkg_DataDriven_MuJet.root"
 };
 
   //TString sample_names[] = {"TT_tot","WW_tot","single_top_tot","WZ_tot","ZZ_tot","datadriven"};
@@ -59,7 +60,7 @@ void create_input_histos(int width_signal_region){
   myfile.open ("txt_out/normalization.txt");
 
   double mass_min=200;
-  double mass_max=1000;
+  double mass_max=4000;
 
   int step_size=100;
 
@@ -151,8 +152,7 @@ void create_input_histos(int width_signal_region){
     if (debug) std::cout << "will get the hist h1_0_emu_Mass"<< std::endl;
     
     hist_ori=(TH1D*)infile->Get("emu/Stage_0/h1_0_emu_Mass");
-    //if (sample_names[i] != "datadriven") 
-    hist_ori->Scale(Lumi_bkg);
+    if (sample_names[i] != "datadriven")  hist_ori->Scale(Lumi_bkg);
     if (sample_names[i]=="TT_tot") {
       std::cout << "Extra k-factor scaling will be done for TTbar background" << std::endl;
       hist_ori->Scale(ttbar_kfact);
@@ -170,17 +170,17 @@ void create_input_histos(int width_signal_region){
     
     if (debug) std::cout << "Now multiply mass_mean_hist_bkg with pdf_rel (up and down) hist" << std::endl;
 
-    //if (sample_names[i] != "datadriven") {
+    if (sample_names[i] != "datadriven") {
       TH1D* hist_pdf_thisBkg_Up = new TH1D("bkgUPpdf", "BkgUpPDF", 6200, 0, 6200);   //  = hist_pdf_rel_up *(*hist_ori);
       TH1D* hist_pdf_thisBkg_Down = new TH1D("bkgDOWNpdf", "BkgDOWNPDF", 6200, 0, 6200); ; //= hist_pdf_rel_down *(*hist_ori);
-
+      
       for (int ii=1; ii<6201; ii++) {
 	double my_up=hist_pdf_rel_up->GetBinContent(ii);
 	double my_down=hist_pdf_rel_down->GetBinContent(ii);
 	double my_mean=hist_ori->GetBinContent(ii);
 	double mul_my_up = my_up*my_mean;
 	double mul_my_down = my_down*my_mean;
-
+	
 	hist_pdf_thisBkg_Up->SetBinContent(ii,mul_my_up);
 	hist_pdf_thisBkg_Down->SetBinContent(ii,mul_my_down);
       }
@@ -196,13 +196,13 @@ void create_input_histos(int width_signal_region){
       hist_pdf_thisBkg_Down->SetName(sample_names[i]+"_"+"pdf_syst"+"Down");
       hist_pdf_thisBkg_Down->Write(); 
       myfile << "bkg " << sample_names[i]+"_"+"pdf_syst"+"Down" << " " << hist_pdf_thisBkg_Down->Integral(1,6000) << "\n";
-      //}
+    }
     //###############
     //loop over other systematics
     //###############  
     if (debug) std::cout << "will start the syst loop"<< std::endl;
     
-    //if (sample_names[i] != "datadriven") {
+    if (sample_names[i] != "datadriven") {
       for(int k=0; k<arraySize_systs; k++)
 	{
 	  TH1D* hist_syst_up;
@@ -232,7 +232,7 @@ void create_input_histos(int width_signal_region){
 	if (debug) std::cout << "Successfully deleted hist_syst_up hist_syst_down "<< std::endl;
 	
       }
-      // }
+    }
     if (debug) std::cout << "Will delete hist_ori "<< std::endl;
     delete hist_ori;
     if (debug) std::cout << "Successfully deleted hist_ori "<< std::endl;
@@ -249,10 +249,11 @@ void create_input_histos(int width_signal_region){
 
   //TAG get the file with the data histogram
   if (debug) std::cout << "will get data root file"<< std::endl;
-  TFile* data_file = new TFile("/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/allData.root");
+  TFile* data_file = new TFile("/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/allData.root");
   TH1D* data;
   //  data=(TH1F*)data_file->Get("h1_inv_mass_1mu_1tau_aligned_7_0");
-  if (debug) std::cout << "will get data hist"<< std::endl;
+  //if (debug) 
+  std::cout << "will get data hist"<< std::endl;
   data=(TH1D*)data_file->Get("emu/Stage_0/h1_0_emu_Mass"); 
 
   outfile->cd();
@@ -260,6 +261,7 @@ void create_input_histos(int width_signal_region){
   data->Write();
 
   myfile << "data " << "data" << " " << data->Integral(1,6000) << "\n";
+  std::cout << "data " << "data" << " " << data->Integral() << "\n";
 
   //###############
   //prepare input for the individual mass points
@@ -333,7 +335,9 @@ void create_input_histos(int width_signal_region){
       resolution_down=mass_sig*(fit_resolution_down->Eval(mass_sig));
 
       acceff=fit_acceff->Eval(mass_sig);
-      std::cout << "mass_sig=" << mass_sig << " resolution=" << resolution  << "  resolution_up="<< resolution_up  << "  resolution_down="  << resolution_down  <<std::endl;
+      //   std::cout << "mass_sig=" << mass_sig << " abs resolution=" << resolution  << "  abs resolution_up="<< resolution_up  << "  abs resolution_down="  << resolution_down  <<std::endl;
+      std::cout <<  mass_sig << " &  " << (fit_resolution->Eval(mass_sig))*100 << "%    &   " <<     acceff << " \\\\" << std::endl;
+
       limit_lower=mass_sig-width_signal_region*resolution;
       limit_upper=mass_sig+width_signal_region*resolution;
       
@@ -416,7 +420,7 @@ void create_input_histos(int width_signal_region){
 	  signal_temp->SetBinError(m,0.);
 	}
       */
-      cout << "signal mass: " << mass_sig << " N events: " << signal_temp->Integral(1,6000) << endl; 
+      //      cout << "signal mass: " << mass_sig << " N events: " << signal_temp->Integral(1,6000) << endl; 
       
       // Signal eff systematic //
       acceff_up=fit_acceff_up->Eval(mass_sig);
@@ -470,7 +474,7 @@ void create_input_histos(int width_signal_region){
       // std::cout << "Will set name now (UP)" << std::endl;
       TString mass_sig_name = "";
       mass_sig_name += int(mass_sig); 
-      std::cout << "mass_sig_name " << mass_sig_name << std::endl;
+      //std::cout << "mass_sig_name " << mass_sig_name << std::endl;
       hist_pdf_thisSig_Up->SetName("signal_pdf_systUp");
       myfile << "signal syst " << mass_sig  << " signal_pdf_systUp " <<   hist_pdf_thisSig_Up->Integral(1,6000) << "\n";
       // std::cout << "Will set name now (DOWN)" << std::endl;

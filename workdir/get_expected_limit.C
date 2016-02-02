@@ -35,12 +35,12 @@ void get_expected_limit(TString in_dir)
 
   int mass_min=200;
   int mass_inter_0=1000;  
-  int mass_inter_1=1600;
+  int mass_inter_1=1200;
   //  int mass_inter_2=2800;  
   //  int mass_inter_3=3400;
   int mass_max=4000;
 
-  int binning_0=100;
+  int binning_0=20;
   int binning_1=200;
   int binning_2=200;
   // int binning_3=600;  
@@ -251,8 +251,8 @@ void get_expected_limit(TString in_dir)
       observed_limit_mass_kM << mass << " " << kM << " " << limit*xsec_NLO[counter_masses] << endl;            
       expected_limit_mass_kM << mass << " " << kM << " " << xs_expected[counter_masses] << endl;            
 
-      //      cout << mass << "  &   " << xs_expected[counter_masses] << "  &   "  <<   xs_observed[counter_masses]  <<  " \\\\ "    << endl; 
-      std::cout << "Mass " << mass <<  " " << xs_expected[counter_masses] << "=" << expected[counter_masses] << "*" <<xsec_NLO[counter_masses] << std::endl; 
+       cout << mass << "  &   " << xs_expected[counter_masses] << "  &   "  <<   xs_observed[counter_masses]  <<  " \\\\ "    << endl; 
+      // std::cout << "Mass " << mass <<  " " << xs_expected[counter_masses] << "=" << expected[counter_masses] << "*" <<xsec_NLO[counter_masses] << std::endl; 
 
       counter_masses++;
 

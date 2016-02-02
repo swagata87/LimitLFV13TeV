@@ -69,7 +69,7 @@ void limit_scan()
     }
 
   string line;
-  ifstream observed_in ("expected_limit_mass_kM.txt");
+  ifstream observed_in ("observed_limit_mass_kM.txt");
   //ifstream observed_in ("observed_limit_mass_kM.txt");
   //ifstream observed_in ("observed_limit_mass_kM_add_cuts.txt");
   if (observed_in.is_open())

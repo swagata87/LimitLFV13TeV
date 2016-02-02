@@ -27,12 +27,18 @@ do
 
   cd $direct/condor
 
-   if [ -e observed.root ]
-       then
-       echo "observed_limit.root already exists in $direct "
-       cd $startdir
-       continue
-   fi
+
+  if [ -e observed.root ]
+      then
+      rm -f observed.root
+  fi  
+
+#   if [ -e observed.root ]
+#       then
+#       echo "observed_limit.root already exists in $direct "
+#       cd $startdir
+#       continue
+#   fi
 
 #   filelist=`ls | grep higgsCombine | grep root`
 
@@ -64,7 +70,7 @@ do
         continue      
     else
         file_observed=`ls | grep higgsCombine | grep root | grep mH50 | head -n 1`
-        mv ${file_observed} observed.root
+        cp ${file_observed} observed.root
     fi
       
 
