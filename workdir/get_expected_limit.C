@@ -39,31 +39,31 @@ void get_expected_limit(TString in_dir)
   Char_t file_title_3[200];
 
   int mass_min=200;
-  int mass_inter_0=480;  
-  int mass_inter_1=560;
+  int mass_inter_0=400;  
+  int mass_inter_1=500;
   int mass_inter_2=600;  
-  int mass_inter_3=680;
-  int mass_inter_4=1600;
+  int mass_inter_3=1700;
+  int mass_inter_4=1800;
   int mass_max=4000;
 
-  int binning_0=40;
-  int binning_1=80;
-  int binning_2=40;
-  int binning_3=80;  
-  int binning_4=20;  
+  int binning_0=20;
+  int binning_1=20;
+  int binning_2=20;
+  int binning_3=20;  
+  int binning_4=100;  
   int binning_5=200;
 
   ///// Expected Limit /////
   int mass_min_exp=200;
-  int mass_inter_0_exp=1800;
-  int mass_inter_1_exp=2600;
-  int mass_inter_2_exp=2800;
+  int mass_inter_0_exp=400;
+  int mass_inter_1_exp=600;
+  int mass_inter_2_exp=800;
   int mass_max_exp=4000;
 
   int binning_0_exp=200;
-  int binning_1_exp=800;
+  int binning_1_exp=200;
   int binning_2_exp=200;
-  int binning_3_exp=400;
+  int binning_3_exp=200;
 
   //////////////////////////
 
@@ -548,7 +548,7 @@ void get_expected_limit(TString in_dir)
  
     TGraph *graph_observed_total = new TGraph(counter_masses,masses,xs_observed);
     graph_observed->GetXaxis()->SetRangeUser(mass_min,mass_max);
-    graph_observed->GetYaxis()->SetRangeUser(0.1,1000.);
+    graph_observed->GetYaxis()->SetRangeUser(1,1000.);
     //gPad->SetLogy();
     graph_observed_total->SetTitle("");
     graph_observed_total->SetMarkerStyle(0);
@@ -562,7 +562,7 @@ void get_expected_limit(TString in_dir)
 
     TGraph *graph_expected_total = new TGraph(counter_masses_exp,masses_exp,xs_expected);
     graph_expected_total->GetXaxis()->SetRangeUser(mass_min_exp,mass_max_exp);
-    graph_expected_total->GetYaxis()->SetRangeUser(0.1,1000000.);
+    graph_expected_total->GetYaxis()->SetRangeUser(1,10000.);
     //gPad->SetLogy();
     graph_expected_total->SetTitle("");
     graph_expected_total->SetMarkerStyle(0);
@@ -581,7 +581,7 @@ void get_expected_limit(TString in_dir)
     graph_expected_total->GetXaxis()->SetTitle("M_{#tilde{#nu}_{#tau}} (GeV)");
     graph_expected_total->GetYaxis()->SetTitle("#sigma^{prod}_{#tilde{#nu_{#tau}}} #times BR ( #tilde{#nu_{#tau}} #rightarrow e#mu ) (fb)");
     graph_expected_total->GetXaxis()->SetRangeUser(mass_min_exp,mass_max_exp);
-    graph_expected_total->GetYaxis()->SetRangeUser(0.1,1000000.);
+    graph_expected_total->GetYaxis()->SetRangeUser(1,10000.);
     graph_expected_total->Draw("Apl");   
 
 
@@ -694,9 +694,9 @@ void get_expected_limit(TString in_dir)
     leg_total->AddEntry(grshade_95, "95% expected","f");
     //leg_total->AddEntry(graph_xsec, "#splitline{RPV signal (NLO)}{#lambda^{I}_{311}=#lambda_{132}=0.01}","l");
     leg_total->AddEntry(graph_xsec, "RPV signal (NLO)","");
-    leg_total->AddEntry(graph_xsec_2, "#lambda^{I}_{311}=#lambda_{312}=#lambda_{321}=0.01","l");
-    leg_total->AddEntry(graph_xsec, "#lambda^{I}_{311}=#lambda_{312}=#lambda_{321}=0.1","l");
-    leg_total->AddEntry(graph_xsec_3, "#lambda^{I}_{311}=#lambda_{312}=#lambda_{321}=0.2","l");
+    leg_total->AddEntry(graph_xsec_2, "#lambda^{I}_{311}=#lambda_{132}=#lambda_{231}=0.01","l");
+    leg_total->AddEntry(graph_xsec, "#lambda^{I}_{311}=#lambda_{132}=#lambda_{231}=0.1","l");
+    leg_total->AddEntry(graph_xsec_3, "#lambda^{I}_{311}=#lambda_{132}=#lambda_{231}=0.2","l");
 
     //leg_total->AddEntry(fit_xsec_Zprime,"Z'/a' (LO)","l"); 
     //leg_total->AddEntry(borderline," ","");
@@ -718,7 +718,7 @@ void get_expected_limit(TString in_dir)
     CMS_text_2->SetTextAngle(0);
     CMS_text_2->Draw("same");    
 
-    TLatex* lumiText = new TLatex(0.95,0.975,"2.5 fb^{-1} (13 TeV)");
+    TLatex* lumiText = new TLatex(0.95,0.975,"2.7 fb^{-1} (13 TeV)");
     lumiText->SetNDC();
     lumiText->SetTextFont(42);
     lumiText->SetTextSize(0.04);

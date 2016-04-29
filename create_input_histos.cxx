@@ -27,15 +27,15 @@ void create_input_histos(int width_signal_region){
   TFile* infile; 
 
   TString rootfilenames[] = {
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/ttbar_tot.root",
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/WW_tot.root",
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/SingleTop_tot.root",
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/DY_tot.root",
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/WZ_tot.root",
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/ZZ_tot.root",
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/Wgamma.root",
+    "/net/scratch_cms/institut_3a/mukherjee/March24_Envelope/ttbar_tot.root",
+    "/net/scratch_cms/institut_3a/mukherjee/March24_Envelope/WW_tot.root",
+    "/net/scratch_cms/institut_3a/mukherjee/March24_Envelope/SingleTop_tot.root",
+    "/net/scratch_cms/institut_3a/mukherjee/March24_Envelope/DY_tot.root",
+    "/net/scratch_cms/institut_3a/mukherjee/March24_Envelope/WZ_tot.root",
+    "/net/scratch_cms/institut_3a/mukherjee/March24_Envelope/ZZ_tot.root",
+    "/net/scratch_cms/institut_3a/mukherjee/March24_Envelope/Wgamma.root",
     //"/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/QCD.root"
-    "/net/scratch_cms/institut_3a/mukherjee/March17_pT_smear/Bkg_DataDriven_MuJet.root"
+    "/net/scratch_cms/institut_3a/mukherjee/NewJson/Bkg_DataDriven_MuJet.root"
 };
 
   //TString sample_names[] = {"TT_tot","WW_tot","single_top_tot","WZ_tot","ZZ_tot","datadriven"};
@@ -43,7 +43,7 @@ void create_input_histos(int width_signal_region){
   const int arraySize = sizeof(sample_names)/sizeof(sample_names[0]);  
 
   //names of systematics for shape-based input
-  TString syst_names[] ={"pileup_syst_","eleID_syst_","Ele_syst_Scale","Muon_syst_Scale","Muon_syst_Resolution","muoID_syst_", "topShape_syst_"};
+  TString syst_names[] ={"pileup_syst_","eleID_syst_","Ele_syst_Scale","Muon_syst_Scale","Muon_syst_Resolution","muoID_syst_", "TopEnvelope_syst_"};
   const int arraySize_systs = sizeof(syst_names)/sizeof(syst_names[0]);    
 
   std::cout << "No- of systematics " << arraySize_systs << "  No. of bkg MC samples " << arraySize << std::endl;
@@ -61,7 +61,7 @@ void create_input_histos(int width_signal_region){
   myfile.open ("txt_out/normalization.txt");
 
   double mass_min=200;
-  double mass_max=400;
+  double mass_max=1700;
 
   int step_size=20;
 
@@ -136,7 +136,7 @@ void create_input_histos(int width_signal_region){
 
   //////////////////////////////////////
   //              UPDATE              //
-  double Lumi_bkg = (2620.0/1000.0);
+  double Lumi_bkg = (2671.0/1000.0);
   std::cout << "Lumi scale factor for bkg : " << Lumi_bkg << std::endl;
   /////////////////////////////////////
   
@@ -171,8 +171,8 @@ void create_input_histos(int width_signal_region){
     hist_ori->Write(sample_names[i]);
     
     //TAG check which binning is used for the histograms (here: 1-10000, 1 GeV binning)
-    std::cout  << "bkg " << sample_names[i] << " " << hist_ori->Integral(501,1000) << "\n";
-    myfile << "bkg " << sample_names[i] << " " << hist_ori->Integral(1,6000) << "\n";
+    std::cout  << "bkg " << sample_names[i] << " " << hist_ori->Integral(1,10000) << "\n";
+    myfile << "bkg " << sample_names[i] << " " << hist_ori->Integral(1,10000) << "\n";
     
     
     if (debug) std::cout << "Now multiply mass_mean_hist_bkg with pdf_rel (up and down) hist" << std::endl;
@@ -197,12 +197,12 @@ void create_input_histos(int width_signal_region){
       hist_pdf_thisBkg_Up->Write();
       std::cout << "MEAN hist classname " << hist_ori->ClassName() << std::endl;
       std::cout << "UP hist classname " << hist_pdf_thisBkg_Up->ClassName() << std::endl;
-      myfile << "bkg " << sample_names[i]+"_"+"pdf_syst"+"Up" << " " << hist_pdf_thisBkg_Up->Integral(1,6000) << "\n";
+      myfile << "bkg " << sample_names[i]+"_"+"pdf_syst"+"Up" << " " << hist_pdf_thisBkg_Up->Integral(1,10000) << "\n";
       
       // hist_pdf_thisBkg_Down.Scale( (hist_ori->Integral()) / (hist_pdf_thisBkg_Down.Integral()) );
       hist_pdf_thisBkg_Down->SetName(sample_names[i]+"_"+"pdf_syst"+"Down");
       hist_pdf_thisBkg_Down->Write(); 
-      myfile << "bkg " << sample_names[i]+"_"+"pdf_syst"+"Down" << " " << hist_pdf_thisBkg_Down->Integral(1,6000) << "\n";
+      myfile << "bkg " << sample_names[i]+"_"+"pdf_syst"+"Down" << " " << hist_pdf_thisBkg_Down->Integral(1,10000) << "\n";
     }
     //###############
     //loop over other systematics
@@ -226,11 +226,11 @@ void create_input_histos(int width_signal_region){
 	  hist_syst_down->Scale(Lumi_bkg);
 	  hist_syst_up->SetName(sample_names[i]+"_"+syst_names[k]+"Up");
 	  hist_syst_up->Write(); 
-	  myfile << "bkg " << sample_names[i]+"_"+syst_names[k]+"Up" << " " << hist_syst_up->Integral(1,6000) << "\n";
+	  myfile << "bkg " << sample_names[i]+"_"+syst_names[k]+"Up" << " " << hist_syst_up->Integral(1,10000) << "\n";
 	  
 	  hist_syst_down->SetName(sample_names[i]+"_"+syst_names[k]+"Down");
 	  hist_syst_down->Write(); 
-	  myfile << "bkg " << sample_names[i]+"_"+syst_names[k]+"Down" << " " << hist_syst_down->Integral(1,6000) << "\n";
+	  myfile << "bkg " << sample_names[i]+"_"+syst_names[k]+"Down" << " " << hist_syst_down->Integral(1,10000) << "\n";
 	  
 	  if (debug) std::cout << "Will delete hist_syst_up hist_syst_down "<< std::endl;
 	  
@@ -256,7 +256,7 @@ void create_input_histos(int width_signal_region){
 
   //TAG get the file with the data histogram
   if (debug) std::cout << "will get data root file"<< std::endl;
-  TFile* data_file = new TFile("/net/scratch_cms/institut_3a/mukherjee/March7/7_6_samples/allData.root");
+  TFile* data_file = new TFile("/net/scratch_cms/institut_3a/mukherjee/NewJson/allData.root");
   TH1D* data;
   //  data=(TH1F*)data_file->Get("h1_inv_mass_1mu_1tau_aligned_7_0");
   //if (debug) 
@@ -267,7 +267,7 @@ void create_input_histos(int width_signal_region){
   data->SetName("data_obs");
   data->Write();
 
-  myfile << "data " << "data" << " " << data->Integral(1,6000) << "\n";
+  myfile << "data " << "data" << " " << data->Integral(1,10000) << "\n";
   std::cout << "data " << "data" << " " << data->Integral() << "\n";
 
   //###############
@@ -388,11 +388,11 @@ void create_input_histos(int width_signal_region){
 
 	if(strcmp(h1->GetName(),"data_obs") ==0 )
 	  {
-	    myfile_temp << "data " << h1->GetName() << " " << h1->Integral(1,6000) << "\n";	    
+	    myfile_temp << "data " << h1->GetName() << " " << h1->Integral(1,10000) << "\n";	    
 	  }	
 	else
 	  {
-	    myfile_temp << "bkg " << h1->GetName() << " " << h1->Integral(1,6000) << "\n"; 
+	    myfile_temp << "bkg " << h1->GetName() << " " << h1->Integral(1,10000) << "\n"; 
 	  }
 	
 	h1->Write();
@@ -418,7 +418,7 @@ void create_input_histos(int width_signal_region){
       signal_temp->FillRandom("gauss",10000);
       signal_temp->Sumw2();
       signal_temp->Scale((xsec/1000.0)*acceff*lumi_scale/10000.);
-      myfile << "signal " << mass_sig << " " << signal_temp->Integral(1,6000) << "\n";
+      myfile << "signal " << mass_sig << " " << signal_temp->Integral(1,10000) << "\n";
       /*
       for(int n=1;n<(bin_limit_lower);n++)
 	{
@@ -442,7 +442,7 @@ void create_input_histos(int width_signal_region){
       signal_temp_Eff_up->FillRandom("gauss",10000);
       signal_temp_Eff_up->Sumw2();
       signal_temp_Eff_up->Scale((xsec/1000.0)*acceff_up*lumi_scale/10000.);
-      myfile << "signal syst " << mass_sig << " signal_Eff_systUp " << signal_temp_Eff_up->Integral(1,6000) << "\n";
+      myfile << "signal syst " << mass_sig << " signal_Eff_systUp " << signal_temp_Eff_up->Integral(1,10000) << "\n";
 
       acceff_down=acceff-(acceff*0.1);
       std::cout << "acceff=" << acceff << " acceff_up=" << acceff_up << " acceff_down=" << acceff_down  << std::endl;
@@ -452,7 +452,7 @@ void create_input_histos(int width_signal_region){
       signal_temp_Eff_down->FillRandom("gauss",10000);
       signal_temp_Eff_down->Sumw2();
       signal_temp_Eff_down->Scale((xsec/1000.0)*acceff_down*lumi_scale/10000.);
-      myfile << "signal syst " << mass_sig << " signal_Eff_systDown " << signal_temp_Eff_down->Integral(1,6000) << "\n";
+      myfile << "signal syst " << mass_sig << " signal_Eff_systDown " << signal_temp_Eff_down->Integral(1,10000) << "\n";
       
 
       // Signal mass resolution systematic //
@@ -462,7 +462,7 @@ void create_input_histos(int width_signal_region){
       signal_temp_massRes_up->FillRandom("gauss",10000);
       signal_temp_massRes_up->Sumw2();
       signal_temp_massRes_up->Scale((xsec/1000.0)*acceff*lumi_scale/10000.);
-      myfile << "signal syst " << mass_sig << " signal_massRes_systUp " << signal_temp_massRes_up->Integral(1,6000) << "\n";
+      myfile << "signal syst " << mass_sig << " signal_massRes_systUp " << signal_temp_massRes_up->Integral(1,10000) << "\n";
 
       gauss->SetParameter(0,mass_sig);
       gauss->SetParameter(1,resolution_down);
@@ -470,7 +470,7 @@ void create_input_histos(int width_signal_region){
       signal_temp_massRes_down->FillRandom("gauss",10000);
       signal_temp_massRes_down->Sumw2();
       signal_temp_massRes_down->Scale((xsec/1000.0)*acceff*lumi_scale/10000.);
-      myfile << "signal syst " << mass_sig << " signal_massRes_systDown " << signal_temp_massRes_down->Integral(1,6000) << "\n";
+      myfile << "signal syst " << mass_sig << " signal_massRes_systDown " << signal_temp_massRes_down->Integral(1,10000) << "\n";
       
       // Signal pdf systematic //
 
@@ -547,10 +547,10 @@ void create_input_histos(int width_signal_region){
       mass_sig_name += int(mass_sig); 
       //std::cout << "mass_sig_name " << mass_sig_name << std::endl;
       hist_pdf_thisSig_Up->SetName("signal_pdf_systUp");
-      myfile << "signal syst " << mass_sig  << " signal_pdf_systUp " <<   hist_pdf_thisSig_Up->Integral(1,6000) << "\n";
+      myfile << "signal syst " << mass_sig  << " signal_pdf_systUp " <<   hist_pdf_thisSig_Up->Integral(1,10000) << "\n";
       // std::cout << "Will set name now (DOWN)" << std::endl;
       hist_pdf_thisSig_Down->SetName("signal_pdf_systDown");
-      myfile << "signal syst " << mass_sig << " signal_pdf_systDown " <<  hist_pdf_thisSig_Down->Integral(1,6000) << "\n";
+      myfile << "signal syst " << mass_sig << " signal_pdf_systDown " <<  hist_pdf_thisSig_Down->Integral(1,10000) << "\n";
 
       // Write in output file
       outfile_signal->cd();
@@ -562,13 +562,13 @@ void create_input_histos(int width_signal_region){
       
       hist_pdf_thisSig_Up->Write();
       hist_pdf_thisSig_Down->Write();
-      myfile_temp << "signal " << mass_sig << " " << signal_temp->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_Eff_systUp " << signal_temp_Eff_up->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_Eff_systDown " << signal_temp_Eff_down->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_massRes_systUp " << signal_temp_massRes_up->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_massRes_systDown " << signal_temp_massRes_down->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_pdf_systUp " << hist_pdf_thisSig_Up->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_pdf_systDown " << hist_pdf_thisSig_Down->Integral(1,6000) << "\n";
+      myfile_temp << "signal " << mass_sig << " " << signal_temp->Integral(1,10000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_Eff_systUp " << signal_temp_Eff_up->Integral(1,10000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_Eff_systDown " << signal_temp_Eff_down->Integral(1,10000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_massRes_systUp " << signal_temp_massRes_up->Integral(1,10000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_massRes_systDown " << signal_temp_massRes_down->Integral(1,10000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_pdf_systUp " << hist_pdf_thisSig_Up->Integral(1,10000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_pdf_systDown " << hist_pdf_thisSig_Down->Integral(1,10000) << "\n";
 
       masses[k]=mass_sig;
 

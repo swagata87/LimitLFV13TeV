@@ -308,7 +308,7 @@ void limit_scan()
     CMS_text_3->Draw("same");        
     */
 
-    TLatex* lumiText = new TLatex(0.93,0.92,"2.5 fb^{-1} (13 TeV)");
+    TLatex* lumiText = new TLatex(0.93,0.92,"2.7 fb^{-1} (13 TeV)");
     lumiText->SetNDC();
     lumiText->SetTextFont(42);
     lumiText->SetTextSize(0.03);

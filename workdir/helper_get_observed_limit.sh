@@ -33,12 +33,12 @@ do
       rm -f observed.root
   fi  
 
-#   if [ -e observed.root ]
-#       then
-#       echo "observed_limit.root already exists in $direct "
-#       cd $startdir
-#       continue
-#   fi
+   if [ -e observed.root ]
+       then
+       echo "observed_limit.root already exists in $direct "
+       cd $startdir
+       continue
+   fi
 
 #   filelist=`ls | grep higgsCombine | grep root`
 
@@ -59,6 +59,9 @@ do
 #    fi
 
 #  done
+
+
+
 
 
    Nobserved=`ls | grep higgsCombine | grep root | grep mH50 | head -n 1 | wc -l`

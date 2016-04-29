@@ -27,5 +27,6 @@ Muon_syst_Resolution	 shape	-	1.	1.	1.	        1.	1.	1.	1       -
 pileup_syst_             shape  -       1.      1.      1.              1.      1.      1.      1       -
 eleID_syst_              shape  -       1.      1.      1.              1.      1.      1.      1       -
 muoID_syst_              shape  -       1.      1.      1.              1.      1.      1.      1       - 
-topShape_syst_           shape  -       1.      1.      1.              1.      1.      1.      1.      -
+TopEnvelope_syst_        shape  -       1.      1.      1.              1.      1.      1.      1.      -
+pdf_syst                 shape  -       1.      1.      1.              1.      1.      1.      1       - 
 massRes_syst             shape  1.      -       -       -               -       -       -       -       -   
